@@ -256,7 +256,7 @@ def bowler_cards(bowler_name, batting_hand):
 
 # Streamlit interface
 st.title("Bowler Cards Web App")
-bowler_name = st.selectbox("Select a Bowler", player_info['Player Names'].unique().sort())
+bowler_name = st.selectbox("Select a Bowler", player_info['Player Names'].unique().tolist().sort())
 batter_hand = st.selectbox("Batter Hand", ['Right', 'Left', 'Both'])
 
 if st.button("Generate Bowler Card"):
