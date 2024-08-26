@@ -171,7 +171,18 @@ def bowler_cards(bowler_name, batting_hand):
         ax_pitch.set_xticks([])  # Turn off x-axis tick labels
         ax_pitch.set_yticks([])  # Turn off y-axis tick labels
         ax_pitch.set_title('PitchX vs PitchY',fontsize=10)
-    
+    elif batting_hand == 'Both':
+        img_path = 'cricketpitch.png'
+        pitch = mpimg.imread(img_path)
+        # Scatter plot for PitchX vs PitchY
+        ax_pitch = fig.add_subplot(gs[5:7, 1:2])
+        ax_pitch.imshow(pitch, extent=[-1.525, 1.525, 0, 21], aspect='auto')
+        ax_pitch.scatter(allmaps['PitchY'], allmaps['PitchX'], alpha=0.7, s=5)
+        ax_pitch.set_xlim(left=0, right=21)
+        ax_pitch.set_ylim(top=1.525, bottom=-1.525)
+        ax_pitch.set_xticks([])  # Turn off x-axis tick labels
+        ax_pitch.set_yticks([])  # Turn off y-axis tick labels
+        ax_pitch.set_title('PitchX vs PitchY',fontsize=10)
     
     
     stumps_path = 'stumps.png'
@@ -199,7 +210,15 @@ def bowler_cards(bowler_name, batting_hand):
         ax_release.set_xticks([])  # Turn off x-axis tick labels
         ax_release.set_yticks([])  # Turn off y-axis tick labels
         ax_release.set_title('ReleaseY vs ReleaseZ',fontsize=10)
-        
+    elif batting_hand == 'Both':
+        ax_release = fig.add_subplot(gs[5:7, :1])
+        ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+        ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5)
+        ax_release.set_ylim(bottom=0, top=2.5)
+        ax_release.set_xlim(left=-1.525, right=1.525)
+        ax_release.set_xticks([])  # Turn off x-axis tick labels
+        ax_release.set_yticks([])  # Turn off y-axis tick labels
+    
     if batting_hand == 'Right':
         allmaps = allmaps[allmaps['Batting Hand'] == 'RHB']
         # Scatter plot for ReleaseY vs ReleaseZ
@@ -222,18 +241,26 @@ def bowler_cards(bowler_name, batting_hand):
         ax_release.set_xticks([])  # Turn off x-axis tick labels
         ax_release.set_yticks([])  # Turn off y-axis tick labels
         ax_release.set_title('PastY vs PastZ',fontsize=10)
+    elif batting_hand == 'Both':
+        ax_release = fig.add_subplot(gs[5:7, 2:])
+        ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+        ax_release.scatter(allmaps['PastY'], allmaps['PastZ'], alpha=0.7, s=5)
+        ax_release.set_ylim(bottom=0, top=2.5)
+        ax_release.set_xlim(left=-1.525, right=1.525)
+        ax_release.set_xticks([])  # Turn off x-axis tick labels
+        ax_release.set_yticks([])  # Turn off y-axis tick labels
     plt.tight_layout()
     return fig
 
 
-bowler_cards('AAP Atkinson')
 
 # Streamlit interface
 st.title("Bowler Cards Web App")
-bowler_name = st.selectbox("Select a Bowler", player_info['Player Names'].unique())
+bowler_name = st.selectbox("Select a Bowler", player_info['Player Names'].unique().sort())
+batter_hand = st.selectbox("Batter Hand", ['Right', 'Left', 'Both'])
 
 if st.button("Generate Bowler Card"):
-    fig = bowler_cards(bowler_name)
+    fig = bowler_cards(bowler_name, batter_hand)
     st.pyplot(fig)
     
 
