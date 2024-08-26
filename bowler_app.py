@@ -43,7 +43,7 @@ def scrape_espncricinfo_table(url):
 
 current_player_stats = scrape_espncricinfo_table('https://www.espncricinfo.com/records/tournament/bowling-most-wickets-career/county-championship-division-one-2024-15937')
 
-def bowler_cards(bowler_name):
+def bowler_cards(bowler_name, batting_hand):
     # Filter the player info for the given bowler name
     info = player_info[player_info['Player Names'] == bowler_name].iloc[0]
     
@@ -139,61 +139,94 @@ def bowler_cards(bowler_name):
     # Load heatmaps and release data
     heatmaps = pd.read_csv('heatmaps.csv')
     release = pd.read_csv('release.csv')
+    allmaps = pd.read_csv('allmaps.csv')
     
     heatmaps = heatmaps[heatmaps['Bowler'] == bowler_name]
     release = release[release['Bowler'] == bowler_name]
+    allmaps = allmaps[allmaps['Bowler'] == bowler_name]
     
-    img_path = 'cricketpitch.png'
-    pitch = mpimg.imread(img_path)
-    # Scatter plot for PitchX vs PitchY
-    ax_pitch = fig.add_subplot(gs[5, 0:2])
-    ax_pitch.imshow(pitch, extent=[0, 21, -1.525, 1.525], aspect='auto')
-    ax_pitch.scatter(heatmaps['PitchX'], heatmaps['PitchY'], alpha=0.7, s=5)
-    ax_pitch.set_xlim(left=0, right=21)
-    ax_pitch.set_ylim(top=1.525, bottom=-1.525)
-    ax_pitch.set_xticks([])  # Turn off x-axis tick labels
-    ax_pitch.set_yticks([])  # Turn off y-axis tick labels
-    ax_pitch.set_title('PitchX vs PitchY',fontsize=10)
+    if batting_hand == 'Right':
+        allmaps = allmaps[allmaps['Batting Hand'] == 'RHB']
+        img_path = 'cricketpitch.png'
+        pitch = mpimg.imread(img_path)
+        # Scatter plot for PitchX vs PitchY
+        ax_pitch = fig.add_subplot(gs[5:7, 1:2])
+        ax_pitch.imshow(pitch, extent=[-1.525, 1.525, 0, 21], aspect='auto')
+        ax_pitch.scatter(allmaps['PitchY'], allmaps['PitchX'], alpha=0.7, s=5)
+        ax_pitch.set_xlim(left=1.525, right=-1.525)
+        ax_pitch.set_ylim(top=21, bottom=0)
+        ax_pitch.set_xticks([])  # Turn off x-axis tick labels
+        ax_pitch.set_yticks([])  # Turn off y-axis tick labels
+        ax_pitch.set_title('PitchX vs PitchY',fontsize=10)
+    elif batting_hand == 'Left':
+        allmaps = allmaps[allmaps['Batting Hand'] == 'LHB']
+        img_path = 'cricketpitch.png'
+        pitch = mpimg.imread(img_path)
+        # Scatter plot for PitchX vs PitchY
+        ax_pitch = fig.add_subplot(gs[5:7, 1:2])
+        ax_pitch.imshow(pitch, extent=[-1.525, 1.525, 0, 21], aspect='auto')
+        ax_pitch.scatter(allmaps['PitchY'], allmaps['PitchX'], alpha=0.7, s=5)
+        ax_pitch.set_xlim(left=0, right=21)
+        ax_pitch.set_ylim(top=1.525, bottom=-1.525)
+        ax_pitch.set_xticks([])  # Turn off x-axis tick labels
+        ax_pitch.set_yticks([])  # Turn off y-axis tick labels
+        ax_pitch.set_title('PitchX vs PitchY',fontsize=10)
     
-    pitchX = heatmaps['PitchX']
-    pitchY = heatmaps['PitchY']
-    runs = heatmaps['Runs']
     
-    # Define bins for PitchX and PitchY
-    x_bins = np.linspace(0, 21, 50)  # Adjust the number of bins if necessary
-    y_bins = np.linspace(-1.525, 1.525, 50)  # Adjust the number of bins if necessary
-    
-    # Create a 2D histogram with the sum of runs in each bin
-    hist, xedges, yedges = np.histogram2d(pitchX, pitchY, bins=[x_bins, y_bins], weights=runs)
-    
-    # Create a subplot for the zonal heatmap
-    ax_runs = fig.add_subplot(gs[6, 0:2])
-    
-    # Plot the heatmap using imshow
-    cax = ax_runs.imshow(hist.T, origin='lower', cmap='RdYlGn_r', extent=[0, 21, -3.5, 3.5])
-    
-    # Set the title
-    ax_runs.set_title('Zonal Heatmap of Runs', fontsize=10)
-    
-    # Hide x and y ticks
-    ax_runs.set_xticks([])
-    ax_runs.set_yticks([])
     
     stumps_path = 'stumps.png'
     stumps = mpimg.imread(stumps_path)
     
-    # Scatter plot for ReleaseY vs ReleaseZ
-    ax_release = fig.add_subplot(gs[5:7, 2:])
-    ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
-    ax_release.scatter(release['ReleaseY'], release['ReleaseZ'], alpha=0.7, s=5)
-    ax_release.set_ylim(bottom=0, top=2.5)
-    ax_release.set_xlim(left=-1.525, right=1.525)
-    ax_release.set_xticks([])  # Turn off x-axis tick labels
-    ax_release.set_yticks([])  # Turn off y-axis tick labels
-    ax_release.set_title('ReleaseY vs ReleaseZ',fontsize=10)
+    if batting_hand == 'Right':
+        allmaps = allmaps[allmaps['Batting Hand'] == 'RHB']
+        # Scatter plot for ReleaseY vs ReleaseZ
+        ax_release = fig.add_subplot(gs[5:7, :1])
+        ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+        ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5)
+        ax_release.set_ylim(bottom=0, top=2.5)
+        ax_release.set_xlim(left=-1.525, right=1.525)
+        ax_release.set_xticks([])  # Turn off x-axis tick labels
+        ax_release.set_yticks([])  # Turn off y-axis tick labels
+        ax_release.set_title('ReleaseY vs ReleaseZ',fontsize=10)
+    elif batting_hand == 'Left':
+        allmaps = allmaps[allmaps['Batting Hand'] == 'LHB']
+        # Scatter plot for ReleaseY vs ReleaseZ
+        ax_release = fig.add_subplot(gs[5:7, :1])
+        ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+        ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5)
+        ax_release.set_ylim(bottom=0, top=2.5)
+        ax_release.set_xlim(left=-1.525, right=1.525)
+        ax_release.set_xticks([])  # Turn off x-axis tick labels
+        ax_release.set_yticks([])  # Turn off y-axis tick labels
+        ax_release.set_title('ReleaseY vs ReleaseZ',fontsize=10)
+        
+    if batting_hand == 'Right':
+        allmaps = allmaps[allmaps['Batting Hand'] == 'RHB']
+        # Scatter plot for ReleaseY vs ReleaseZ
+        ax_release = fig.add_subplot(gs[5:7, 2:])
+        ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+        ax_release.scatter(allmaps['PastY'], allmaps['PastZ'], alpha=0.7, s=5)
+        ax_release.set_ylim(bottom=0, top=2.5)
+        ax_release.set_xlim(left=-1.525, right=1.525)
+        ax_release.set_xticks([])  # Turn off x-axis tick labels
+        ax_release.set_yticks([])  # Turn off y-axis tick labels
+        ax_release.set_title('PastY vs PastZ',fontsize=10)
+    elif batting_hand == 'Left':
+        allmaps = allmaps[allmaps['Batting Hand'] == 'LHB']
+        # Scatter plot for ReleaseY vs ReleaseZ
+        ax_release = fig.add_subplot(gs[5:7, 2:])
+        ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+        ax_release.scatter(allmaps['PastY'], allmaps['PastZ'], alpha=0.7, s=5)
+        ax_release.set_ylim(bottom=0, top=2.5)
+        ax_release.set_xlim(left=-1.525, right=1.525)
+        ax_release.set_xticks([])  # Turn off x-axis tick labels
+        ax_release.set_yticks([])  # Turn off y-axis tick labels
+        ax_release.set_title('PastY vs PastZ',fontsize=10)
     plt.tight_layout()
     return fig
 
+
+bowler_cards('AAP Atkinson')
 
 # Streamlit interface
 st.title("Bowler Cards Web App")
@@ -202,3 +235,5 @@ bowler_name = st.selectbox("Select a Bowler", player_info['Player Names'].unique
 if st.button("Generate Bowler Card"):
     fig = bowler_cards(bowler_name)
     st.pyplot(fig)
+    
+
