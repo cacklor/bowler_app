@@ -166,8 +166,8 @@ def bowler_cards(bowler_name, batting_hand):
         ax_pitch = fig.add_subplot(gs[5:7, 1:2])
         ax_pitch.imshow(pitch, extent=[-1.525, 1.525, 0, 21], aspect='auto')
         ax_pitch.scatter(allmaps['PitchY'], allmaps['PitchX'], alpha=0.7, s=5)
-        ax_pitch.set_xlim(left=0, right=21)
-        ax_pitch.set_ylim(top=1.525, bottom=-1.525)
+        ax_pitch.set_xlim(left=1.525, right=-1.525)
+        ax_pitch.set_ylim(top=21, bottom=0)
         ax_pitch.set_xticks([])  # Turn off x-axis tick labels
         ax_pitch.set_yticks([])  # Turn off y-axis tick labels
         ax_pitch.set_title('PitchX vs PitchY',fontsize=10)
@@ -178,8 +178,8 @@ def bowler_cards(bowler_name, batting_hand):
         ax_pitch = fig.add_subplot(gs[5:7, 1:2])
         ax_pitch.imshow(pitch, extent=[-1.525, 1.525, 0, 21], aspect='auto')
         ax_pitch.scatter(allmaps['PitchY'], allmaps['PitchX'], alpha=0.7, s=5)
-        ax_pitch.set_xlim(left=0, right=21)
-        ax_pitch.set_ylim(top=1.525, bottom=-1.525)
+        ax_pitch.set_xlim(left=1.525, right=-1.525)
+        ax_pitch.set_ylim(top=21, bottom=0)
         ax_pitch.set_xticks([])  # Turn off x-axis tick labels
         ax_pitch.set_yticks([])  # Turn off y-axis tick labels
         ax_pitch.set_title('PitchX vs PitchY',fontsize=10)
