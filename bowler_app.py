@@ -147,7 +147,7 @@ def bowler_cards(bowler_name, batting_hand):
     
     if batting_hand == 'Right':
         allmaps = allmaps[allmaps['Batting Hand'] == 'RHB']
-        img_path = 'cricketpitch.png'
+        img_path = 'pitch.png'
         pitch = mpimg.imread(img_path)
         # Scatter plot for PitchX vs PitchY
         ax_pitch = fig.add_subplot(gs[5:7, 1:2])
@@ -160,7 +160,7 @@ def bowler_cards(bowler_name, batting_hand):
         ax_pitch.set_title('PitchX vs PitchY',fontsize=10)
     elif batting_hand == 'Left':
         allmaps = allmaps[allmaps['Batting Hand'] == 'LHB']
-        img_path = 'cricketpitch.png'
+        img_path = 'pitch.png'
         pitch = mpimg.imread(img_path)
         # Scatter plot for PitchX vs PitchY
         ax_pitch = fig.add_subplot(gs[5:7, 1:2])
@@ -172,7 +172,7 @@ def bowler_cards(bowler_name, batting_hand):
         ax_pitch.set_yticks([])  # Turn off y-axis tick labels
         ax_pitch.set_title('PitchX vs PitchY',fontsize=10)
     elif batting_hand == 'Both':
-        img_path = 'cricketpitch.png'
+        img_path = 'pitch.png'
         pitch = mpimg.imread(img_path)
         # Scatter plot for PitchX vs PitchY
         ax_pitch = fig.add_subplot(gs[5:7, 1:2])
