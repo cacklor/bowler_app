@@ -144,6 +144,7 @@ def bowler_cards(bowler_name, batting_hand):
     heatmaps = heatmaps[heatmaps['Bowler'] == bowler_name]
     release = release[release['Bowler'] == bowler_name]
     allmaps = allmaps[allmaps['Bowler'] == bowler_name]
+
     
     if batting_hand == 'Right':
         allmaps = allmaps[allmaps['Batting Hand'] == 'RHB']
@@ -151,10 +152,33 @@ def bowler_cards(bowler_name, batting_hand):
         pitch = mpimg.imread(img_path)
         # Scatter plot for PitchX vs PitchY
         ax_pitch = fig.add_subplot(gs[5:7, 1:2])
-        ax_pitch.imshow(pitch, extent=[-1.525, 1.525, 0, 21], aspect='auto')
-        ax_pitch.scatter(allmaps['PitchY'], allmaps['PitchX'], alpha=0.7, s=5)
-        ax_pitch.set_xlim(left=1.525, right=-1.525)
-        ax_pitch.set_ylim(top=21, bottom=0)
+        #ax_pitch.imshow(pitch, extent=[-1.525, 1.525, 0, 21], aspect='auto')
+        rect = patches.Rectangle((-1.83, -1.83), 3.66, 22.56, linewidth=1, edgecolor='black', facecolor='#d0f7e3', alpha=0.7)
+        ax_pitch.add_patch(rect)
+        ax_pitch.plot([-1.83, 1.83], [2.44, 2.44], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.plot([-1.83, 1.83], [20.12, 20.12], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.scatter(x=0, y=1.22, s=40, color='brown', linewidth=0.8, alpha=.7)
+        ax_pitch.scatter(x=-0.13, y=1.22, s=40, color='brown', linewidth=0.8, alpha=.7)
+        ax_pitch.scatter(x=0.13, y=1.22, s=40, color='brown', linewidth=0.8, alpha=.7)
+        ax_pitch.scatter(x=0, y=22.56, s=40, color='brown', linewidth=0.8, alpha=.7)
+        ax_pitch.scatter(x=-0.13, y=22.56, s=40, color='brown', linewidth=0.8, alpha=.7)
+        ax_pitch.scatter(x=0.13, y=22.56, s=40, color='brown', linewidth=0.8, alpha=.7)
+        ax_pitch.plot([-1.83, 1.83], [3.22, 3.22], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.text(x=1.5, y=2.8, s='Yorker', fontsize=5, fontweight='bold', color='black', ha='left')
+        ax_pitch.plot([-1.83, 1.83], [6.22, 6.22], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.text(x=1.5, y=5.8, s='H-Volley', fontsize=5, fontweight='bold', color='black', ha='left')
+        ax_pitch.plot([-1.83, 1.83], [7.22, 7.22], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.text(x=1.5, y=6.8, s='Full', fontsize=5, fontweight='bold', color='black', ha='left')
+        ax_pitch.plot([-1.83, 1.83], [9.22, 9.22], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.plot([-1.83, 1.83], [10.22, 10.22], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.text(x=1.5, y=8.8, s='Good', fontsize=5, fontweight='bold', color='black', ha='left')
+        ax_pitch.text(x=1.5, y=9.8, s='Back', fontsize=5, fontweight='bold', color='black', ha='left')
+        ax_pitch.text(x=1.5, y=10.5, s='Short', fontsize=5, fontweight='bold', color='black', ha='left')
+
+
+        ax_pitch.scatter(allmaps['PitchY'], allmaps['PitchX'], color='green', alpha=0.7, s=5)
+        ax_pitch.set_xlim(left=1.83, right=-1.83)
+        ax_pitch.set_ylim(top=20.12, bottom=0)
         ax_pitch.set_xticks([])  # Turn off x-axis tick labels
         ax_pitch.set_yticks([])  # Turn off y-axis tick labels
         ax_pitch.set_title('PitchX vs PitchY',fontsize=10)
@@ -164,10 +188,33 @@ def bowler_cards(bowler_name, batting_hand):
         pitch = mpimg.imread(img_path)
         # Scatter plot for PitchX vs PitchY
         ax_pitch = fig.add_subplot(gs[5:7, 1:2])
-        ax_pitch.imshow(pitch, extent=[-1.525, 1.525, 0, 21], aspect='auto')
-        ax_pitch.scatter(allmaps['PitchY'], allmaps['PitchX'], alpha=0.7, s=5)
-        ax_pitch.set_xlim(left=1.525, right=-1.525)
-        ax_pitch.set_ylim(top=21, bottom=0)
+        #ax_pitch.imshow(pitch, extent=[-1.525, 1.525, 0, 21], aspect='auto')
+        rect = patches.Rectangle((-1.83, -1.83), 3.66, 22.56, linewidth=1, edgecolor='black', facecolor='#d0f7e3', alpha=0.7)
+        ax_pitch.add_patch(rect)
+        ax_pitch.plot([-1.83, 1.83], [2.44, 2.44], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.plot([-1.83, 1.83], [20.12, 20.12], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.scatter(x=0, y=1.22, s=40, color='brown', linewidth=0.8, alpha=.7)
+        ax_pitch.scatter(x=-0.13, y=1.22, s=40, color='brown', linewidth=0.8, alpha=.7)
+        ax_pitch.scatter(x=0.13, y=1.22, s=40, color='brown', linewidth=0.8, alpha=.7)
+        ax_pitch.scatter(x=0, y=22.56, s=40, color='brown', linewidth=0.8, alpha=.7)
+        ax_pitch.scatter(x=-0.13, y=22.56, s=40, color='brown', linewidth=0.8, alpha=.7)
+        ax_pitch.scatter(x=0.13, y=22.56, s=40, color='brown', linewidth=0.8, alpha=.7)
+        ax_pitch.plot([-1.83, 1.83], [3.22, 3.22], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.text(x=1.5, y=2.8, s='Yorker', fontsize=5, fontweight='bold', color='black', ha='left')
+        ax_pitch.plot([-1.83, 1.83], [6.22, 6.22], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.text(x=1.5, y=5.8, s='H-Volley', fontsize=5, fontweight='bold', color='black', ha='left')
+        ax_pitch.plot([-1.83, 1.83], [7.22, 7.22], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.text(x=1.5, y=6.8, s='Full', fontsize=5, fontweight='bold', color='black', ha='left')
+        ax_pitch.plot([-1.83, 1.83], [9.22, 9.22], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.plot([-1.83, 1.83], [10.22, 10.22], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.text(x=1.5, y=8.8, s='Good', fontsize=5, fontweight='bold', color='black', ha='left')
+        ax_pitch.text(x=1.5, y=9.8, s='Back', fontsize=5, fontweight='bold', color='black', ha='left')
+        ax_pitch.text(x=1.5, y=10.5, s='Short', fontsize=5, fontweight='bold', color='black', ha='left')
+
+
+        ax_pitch.scatter(allmaps['PitchY'], allmaps['PitchX'], color='green', alpha=0.7, s=5)
+        ax_pitch.set_xlim(left=1.83, right=-1.83)
+        ax_pitch.set_ylim(top=20.12, bottom=0)
         ax_pitch.set_xticks([])  # Turn off x-axis tick labels
         ax_pitch.set_yticks([])  # Turn off y-axis tick labels
         ax_pitch.set_title('PitchX vs PitchY',fontsize=10)
@@ -176,10 +223,33 @@ def bowler_cards(bowler_name, batting_hand):
         pitch = mpimg.imread(img_path)
         # Scatter plot for PitchX vs PitchY
         ax_pitch = fig.add_subplot(gs[5:7, 1:2])
-        ax_pitch.imshow(pitch, extent=[-1.525, 1.525, 0, 21], aspect='auto')
-        ax_pitch.scatter(allmaps['PitchY'], allmaps['PitchX'], alpha=0.7, s=5)
-        ax_pitch.set_xlim(left=1.525, right=-1.525)
-        ax_pitch.set_ylim(top=21, bottom=0)
+        #ax_pitch.imshow(pitch, extent=[-1.525, 1.525, 0, 21], aspect='auto')
+        rect = patches.Rectangle((-1.83, -1.83), 3.66, 22.56, linewidth=1, edgecolor='black', facecolor='#d0f7e3', alpha=0.7)
+        ax_pitch.add_patch(rect)
+        ax_pitch.plot([-1.83, 1.83], [2.44, 2.44], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.plot([-1.83, 1.83], [20.12, 20.12], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.scatter(x=0, y=1.22, s=40, color='brown', linewidth=0.8, alpha=.7)
+        ax_pitch.scatter(x=-0.13, y=1.22, s=40, color='brown', linewidth=0.8, alpha=.7)
+        ax_pitch.scatter(x=0.13, y=1.22, s=40, color='brown', linewidth=0.8, alpha=.7)
+        ax_pitch.scatter(x=0, y=22.56, s=40, color='brown', linewidth=0.8, alpha=.7)
+        ax_pitch.scatter(x=-0.13, y=22.56, s=40, color='brown', linewidth=0.8, alpha=.7)
+        ax_pitch.scatter(x=0.13, y=22.56, s=40, color='brown', linewidth=0.8, alpha=.7)
+        ax_pitch.plot([-1.83, 1.83], [3.22, 3.22], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.text(x=1.5, y=2.8, s='Yorker', fontsize=5, fontweight='bold', color='black', ha='left')
+        ax_pitch.plot([-1.83, 1.83], [6.22, 6.22], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.text(x=1.5, y=5.8, s='H-Volley', fontsize=5, fontweight='bold', color='black', ha='left')
+        ax_pitch.plot([-1.83, 1.83], [7.22, 7.22], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.text(x=1.5, y=6.8, s='Full', fontsize=5, fontweight='bold', color='black', ha='left')
+        ax_pitch.plot([-1.83, 1.83], [9.22, 9.22], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.plot([-1.83, 1.83], [10.22, 10.22], color='black', linewidth=1, alpha=0.7)
+        ax_pitch.text(x=1.5, y=8.8, s='Good', fontsize=5, fontweight='bold', color='black', ha='left')
+        ax_pitch.text(x=1.5, y=9.8, s='Back', fontsize=5, fontweight='bold', color='black', ha='left')
+        ax_pitch.text(x=1.5, y=10.5, s='Short', fontsize=5, fontweight='bold', color='black', ha='left')
+
+
+        ax_pitch.scatter(allmaps['PitchY'], allmaps['PitchX'], color='green', alpha=0.7, s=5)
+        ax_pitch.set_xlim(left=1.83, right=-1.83)
+        ax_pitch.set_ylim(top=20.12, bottom=0)
         ax_pitch.set_xticks([])  # Turn off x-axis tick labels
         ax_pitch.set_yticks([])  # Turn off y-axis tick labels
         ax_pitch.set_title('PitchX vs PitchY',fontsize=10)
@@ -193,7 +263,7 @@ def bowler_cards(bowler_name, batting_hand):
         # Scatter plot for ReleaseY vs ReleaseZ
         ax_release = fig.add_subplot(gs[5:7, :1])
         ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
-        ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5)
+        ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5, color='green')
         ax_release.set_ylim(bottom=0, top=2.5)
         ax_release.set_xlim(left=-1.525, right=1.525)
         ax_release.set_xticks([])  # Turn off x-axis tick labels
@@ -204,7 +274,7 @@ def bowler_cards(bowler_name, batting_hand):
         # Scatter plot for ReleaseY vs ReleaseZ
         ax_release = fig.add_subplot(gs[5:7, :1])
         ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
-        ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5)
+        ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5, color='green')
         ax_release.set_ylim(bottom=0, top=2.5)
         ax_release.set_xlim(left=-1.525, right=1.525)
         ax_release.set_xticks([])  # Turn off x-axis tick labels
@@ -213,7 +283,7 @@ def bowler_cards(bowler_name, batting_hand):
     elif batting_hand == 'Both':
         ax_release = fig.add_subplot(gs[5:7, :1])
         ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
-        ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5)
+        ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5, color='green')
         ax_release.set_ylim(bottom=0, top=2.5)
         ax_release.set_xlim(left=-1.525, right=1.525)
         ax_release.set_xticks([])  # Turn off x-axis tick labels
@@ -224,7 +294,7 @@ def bowler_cards(bowler_name, batting_hand):
         # Scatter plot for ReleaseY vs ReleaseZ
         ax_release = fig.add_subplot(gs[5:7, 2:])
         ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
-        ax_release.scatter(allmaps['PastY'], allmaps['PastZ'], alpha=0.7, s=5)
+        ax_release.scatter(allmaps['PastY'], allmaps['PastZ'], alpha=0.7, s=5, color='green')
         ax_release.set_ylim(bottom=0, top=2.5)
         ax_release.set_xlim(left=-1.525, right=1.525)
         ax_release.set_xticks([])  # Turn off x-axis tick labels
@@ -235,7 +305,7 @@ def bowler_cards(bowler_name, batting_hand):
         # Scatter plot for ReleaseY vs ReleaseZ
         ax_release = fig.add_subplot(gs[5:7, 2:])
         ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
-        ax_release.scatter(allmaps['PastY'], allmaps['PastZ'], alpha=0.7, s=5)
+        ax_release.scatter(allmaps['PastY'], allmaps['PastZ'], alpha=0.7, s=5, color='green')
         ax_release.set_ylim(bottom=0, top=2.5)
         ax_release.set_xlim(left=-1.525, right=1.525)
         ax_release.set_xticks([])  # Turn off x-axis tick labels
@@ -243,7 +313,7 @@ def bowler_cards(bowler_name, batting_hand):
         ax_release.set_title('PastY vs PastZ',fontsize=10)
     elif batting_hand == 'Both':
         ax_release = fig.add_subplot(gs[5:7, 2:])
-        ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+        ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto', color='green')
         ax_release.scatter(allmaps['PastY'], allmaps['PastZ'], alpha=0.7, s=5)
         ax_release.set_ylim(bottom=0, top=2.5)
         ax_release.set_xlim(left=-1.525, right=1.525)
