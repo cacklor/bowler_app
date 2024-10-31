@@ -43,7 +43,7 @@ def scrape_espncricinfo_table(url):
 
 current_player_stats = scrape_espncricinfo_table('https://www.espncricinfo.com/records/tournament/bowling-most-wickets-career/county-championship-division-one-2024-15937')
 
-def bowler_cards(bowler_name, batting_hand):
+def bowler_cards(bowler_name, batting_hand, bowler_side):
     # Filter the player info for the given bowler name
     info = player_info[player_info['Player Names'] == bowler_name].iloc[0]
     
@@ -143,8 +143,23 @@ def bowler_cards(bowler_name, batting_hand):
     
     heatmaps = heatmaps[heatmaps['Bowler'] == bowler_name]
     release = release[release['Bowler'] == bowler_name]
+    all_bowlers = allmaps
     allmaps = allmaps[allmaps['Bowler'] == bowler_name]
+    bowler_type = allmaps['Bowler Type'].iloc[0] #May have to .iloc[0]
+    releases = all_bowlers[all_bowlers['Bowler Type'] == bowler_type]
+    if bowler_type[0] == 'R':
+        if bowler_side == 'Over':
+            releases = all_bowlers[all_bowlers['ReleaseY'] < 0]
+        elif bowler_side == 'Round':
+            releases = all_bowlers[all_bowlers['ReleaseY'] > 0]
+    elif bowler_type[0] == 'L':
+        if bowler_side == 'Over':
+            releases = all_bowlers[all_bowlers['ReleaseY'] > 0]
+        elif bowler_side == 'Round':
+            releases = all_bowlers[all_bowlers['ReleaseY'] < 0]
 
+    avg_release_y = releases['ReleaseY'].mean()
+    avg_release_z = releases['ReleaseZ'].mean()
     
     if batting_hand == 'Right':
         allmaps = allmaps[allmaps['Batting Hand'] == 'RHB']
@@ -261,33 +276,202 @@ def bowler_cards(bowler_name, batting_hand):
     if batting_hand == 'Right':
         allmaps = allmaps[allmaps['Batting Hand'] == 'RHB']
         # Scatter plot for ReleaseY vs ReleaseZ
-        ax_release = fig.add_subplot(gs[5:7, :1])
-        ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
-        ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5, color='green')
-        ax_release.set_ylim(bottom=0, top=2.5)
-        ax_release.set_xlim(left=-1.525, right=1.525)
-        ax_release.set_xticks([])  # Turn off x-axis tick labels
-        ax_release.set_yticks([])  # Turn off y-axis tick labels
-        ax_release.set_title('ReleaseY vs ReleaseZ',fontsize=10)
+        if bowler_side == 'Over' and bowler_type[0] == 'R':
+            ax_release = fig.add_subplot(gs[5:7, :1])
+            ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+            ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5, color='green')
+            ax_release.set_ylim(bottom=0, top=2.5)
+            ax_release.set_xlim(left=-1.83, right=0)
+            ax_release.plot([avg_release_y, avg_release_y], [0, 2.5], color='red', linewidth=1, alpha=0.5)
+            ax_release.plot([-1.83, 0], [avg_release_z, avg_release_z], color='red', linewidth=1, alpha=0.5)
+            ax_release.text(x=-1.8, y=0.1, s='Champ Average', fontsize=5, fontweight='bold', color='red', ha='left')
+            plotted = allmaps[allmaps['ReleaseY'] < 0]
+            ax_release.plot([plotted['ReleaseY'].mean(), plotted['ReleaseY'].mean()], [0, 2.5], color='green', linewidth=1, alpha=0.5)
+            ax_release.plot([-1.83, 0], [plotted['ReleaseZ'].mean(), plotted['ReleaseZ'].mean()], color='green', linewidth=1, alpha=0.5)
+            ax_release.text(x=-1.8, y=0.05, s='Player Average', fontsize=5, fontweight='bold', color='green', ha='left')
+            ax_release.set_xticks([])  # Turn off x-axis tick labels
+            ax_release.set_yticks([])  # Turn off y-axis tick labels
+            ax_release.set_title('ReleaseY vs ReleaseZ',fontsize=10)
+        elif bowler_side == 'Round' and bowler_type[0] == 'R':
+            ax_release = fig.add_subplot(gs[5:7, :1])
+            ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+            ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5, color='green')
+            ax_release.set_ylim(bottom=0, top=2.5)
+            ax_release.set_xlim(left=0, right=1.83)
+            ax_release.plot([avg_release_y, avg_release_y], [0, 2.5], color='red', linewidth=1, alpha=0.5)
+            ax_release.plot([0, 1.83], [avg_release_z, avg_release_z], color='red', linewidth=1, alpha=0.5)
+            ax_release.text(1.8, y=0.1, s='Champ Average', fontsize=5, fontweight='bold', color='red', ha='right')
+            plotted = allmaps[allmaps['ReleaseY'] > 0]
+            ax_release.plot([plotted['ReleaseY'].mean(), plotted['ReleaseY'].mean()], [0, 2.5], color='green', linewidth=1, alpha=0.5)
+            ax_release.plot([-1.83, 0], [plotted['ReleaseZ'].mean(), plotted['ReleaseZ'].mean()], color='green', linewidth=1, alpha=0.5)
+            ax_release.text(x=1.8, y=0.05, s='Player Average', fontsize=5, fontweight='bold', color='green', ha='right')
+            ax_release.set_xticks([])  # Turn off x-axis tick labels
+            ax_release.set_yticks([])  # Turn off y-axis tick labels
+            ax_release.set_title('ReleaseY vs ReleaseZ',fontsize=10)
+        elif bowler_side == 'Round' and bowler_type[0] == 'L':
+            ax_release = fig.add_subplot(gs[5:7, :1])
+            ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+            ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5, color='green')
+            ax_release.set_ylim(bottom=0, top=2.5)
+            ax_release.set_xlim(left=-1.83, right=0)
+            ax_release.plot([avg_release_y, avg_release_y], [0, 2.5], color='red', linewidth=1, alpha=0.5)
+            ax_release.plot([-1.83, 0], [avg_release_z, avg_release_z], color='red', linewidth=1, alpha=0.5)
+            ax_release.text(-1.8, y=0.1, s='Champ Average', fontsize=5, fontweight='bold', color='red', ha='left')
+            plotted = allmaps[allmaps['ReleaseY'] < 0]
+            ax_release.plot([plotted['ReleaseY'].mean(), plotted['ReleaseY'].mean()], [0, 2.5], color='green', linewidth=1, alpha=0.5)
+            ax_release.plot([-1.83, 0], [plotted['ReleaseZ'].mean(), plotted['ReleaseZ'].mean()], color='green', linewidth=1, alpha=0.5)
+            ax_release.text(x=-1.8, y=0.05, s='Player Average', fontsize=5, fontweight='bold', color='green', ha='left')
+            ax_release.set_xticks([])  # Turn off x-axis tick labels
+            ax_release.set_yticks([])  # Turn off y-axis tick labels
+            ax_release.set_title('ReleaseY vs ReleaseZ',fontsize=10)
+        elif bowler_side == 'Over' and bowler_type[0] == 'L':
+            ax_release = fig.add_subplot(gs[5:7, :1])
+            ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+            ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5, color='green')
+            ax_release.set_ylim(bottom=0, top=2.5)
+            ax_release.set_xlim(left=0, right=1.83)
+            ax_release.plot([avg_release_y, avg_release_y], [0, 2.5], color='red', linewidth=1, alpha=0.5)
+            ax_release.plot([0, 1.83], [avg_release_z, avg_release_z], color='red', linewidth=1, alpha=0.5)
+            ax_release.text(x=1.8, y=0.1, s='Champ Average', fontsize=5, fontweight='bold', color='red', ha='right')
+            plotted = allmaps[allmaps['ReleaseY'] > 0]
+            ax_release.plot([plotted['ReleaseY'].mean(), plotted['ReleaseY'].mean()], [0, 2.5], color='green', linewidth=1, alpha=0.5)
+            ax_release.plot([-1.83, 0], [plotted['ReleaseZ'].mean(), plotted['ReleaseZ'].mean()], color='green', linewidth=1, alpha=0.5)
+            ax_release.text(x=1.8, y=0.05, s='Player Average', fontsize=5, fontweight='bold', color='green', ha='right')
+            ax_release.set_xticks([])  # Turn off x-axis tick labels
+            ax_release.set_yticks([])  # Turn off y-axis tick labels
+            ax_release.set_title('ReleaseY vs ReleaseZ',fontsize=10)
     elif batting_hand == 'Left':
         allmaps = allmaps[allmaps['Batting Hand'] == 'LHB']
         # Scatter plot for ReleaseY vs ReleaseZ
-        ax_release = fig.add_subplot(gs[5:7, :1])
-        ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
-        ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5, color='green')
-        ax_release.set_ylim(bottom=0, top=2.5)
-        ax_release.set_xlim(left=-1.525, right=1.525)
-        ax_release.set_xticks([])  # Turn off x-axis tick labels
-        ax_release.set_yticks([])  # Turn off y-axis tick labels
-        ax_release.set_title('ReleaseY vs ReleaseZ',fontsize=10)
+        if bowler_side == 'Over' and bowler_type[0] == 'R':
+            ax_release = fig.add_subplot(gs[5:7, :1])
+            ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+            ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5, color='green')
+            ax_release.set_ylim(bottom=0, top=2.5)
+            ax_release.set_xlim(left=-1.83, right=0)
+            ax_release.plot([avg_release_y, avg_release_y], [0, 2.5], color='red', linewidth=1, alpha=0.5)
+            ax_release.plot([-1.83, 0], [avg_release_z, avg_release_z], color='red', linewidth=1, alpha=0.5)
+            ax_release.text(x=-1.8, y=0.1, s='Champ Average', fontsize=5, fontweight='bold', color='red', ha='left')
+            plotted = allmaps[allmaps['ReleaseY'] < 0]
+            ax_release.plot([plotted['ReleaseY'].mean(), plotted['ReleaseY'].mean()], [0, 2.5], color='green', linewidth=1, alpha=0.5)
+            ax_release.plot([-1.83, 0], [plotted['ReleaseZ'].mean(), plotted['ReleaseZ'].mean()], color='green', linewidth=1, alpha=0.5)
+            ax_release.text(x=-1.8, y=0.05, s='Player Average', fontsize=5, fontweight='bold', color='green', ha='left')
+            ax_release.set_xticks([])  # Turn off x-axis tick labels
+            ax_release.set_yticks([])  # Turn off y-axis tick labels
+            ax_release.set_title('ReleaseY vs ReleaseZ',fontsize=10)
+        elif bowler_side == 'Round' and bowler_type[0] == 'R':
+            ax_release = fig.add_subplot(gs[5:7, :1])
+            ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+            ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5, color='green')
+            ax_release.set_ylim(bottom=0, top=2.5)
+            ax_release.set_xlim(left=0, right=1.83)
+            ax_release.plot([avg_release_y, avg_release_y], [0, 2.5], color='red', linewidth=1, alpha=0.5)
+            ax_release.plot([0, 1.83], [avg_release_z, avg_release_z], color='red', linewidth=1, alpha=0.5)
+            ax_release.text(1.8, y=0.1, s='Champ Average', fontsize=5, fontweight='bold', color='red', ha='right')
+            plotted = allmaps[allmaps['ReleaseY'] > 0]
+            ax_release.plot([plotted['ReleaseY'].mean(), plotted['ReleaseY'].mean()], [0, 2.5], color='green', linewidth=1, alpha=0.5)
+            ax_release.plot([-1.83, 0], [plotted['ReleaseZ'].mean(), plotted['ReleaseZ'].mean()], color='green', linewidth=1, alpha=0.5)
+            ax_release.text(x=1.8, y=0.05, s='Player Average', fontsize=5, fontweight='bold', color='green', ha='right')
+            ax_release.set_xticks([])  # Turn off x-axis tick labels
+            ax_release.set_yticks([])  # Turn off y-axis tick labels
+            ax_release.set_title('ReleaseY vs ReleaseZ',fontsize=10)
+        elif bowler_side == 'Round' and bowler_type[0] == 'L':
+            ax_release = fig.add_subplot(gs[5:7, :1])
+            ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+            ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5, color='green')
+            ax_release.set_ylim(bottom=0, top=2.5)
+            ax_release.set_xlim(left=-1.83, right=0)
+            ax_release.plot([avg_release_y, avg_release_y], [0, 2.5], color='red', linewidth=1, alpha=0.5)
+            ax_release.plot([-1.83, 0], [avg_release_z, avg_release_z], color='red', linewidth=1, alpha=0.5)
+            ax_release.text(-1.8, y=0.1, s='Champ Average', fontsize=5, fontweight='bold', color='red', ha='left')
+            plotted = allmaps[allmaps['ReleaseY'] < 0]
+            ax_release.plot([plotted['ReleaseY'].mean(), plotted['ReleaseY'].mean()], [0, 2.5], color='green', linewidth=1, alpha=0.5)
+            ax_release.plot([-1.83, 0], [plotted['ReleaseZ'].mean(), plotted['ReleaseZ'].mean()], color='green', linewidth=1, alpha=0.5)
+            ax_release.text(x=-1.8, y=0.05, s='Player Average', fontsize=5, fontweight='bold', color='green', ha='left')
+            ax_release.set_xticks([])  # Turn off x-axis tick labels
+            ax_release.set_yticks([])  # Turn off y-axis tick labels
+            ax_release.set_title('ReleaseY vs ReleaseZ',fontsize=10)
+        elif bowler_side == 'Over' and bowler_type[0] == 'L':
+            ax_release = fig.add_subplot(gs[5:7, :1])
+            ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+            ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5, color='green')
+            ax_release.set_ylim(bottom=0, top=2.5)
+            ax_release.set_xlim(left=0, right=1.83)
+            ax_release.plot([avg_release_y, avg_release_y], [0, 2.5], color='red', linewidth=1, alpha=0.5)
+            ax_release.plot([0, 1.83], [avg_release_z, avg_release_z], color='red', linewidth=1, alpha=0.5)
+            ax_release.text(x=1.8, y=0.1, s='Champ Average', fontsize=5, fontweight='bold', color='red', ha='right')
+            plotted = allmaps[allmaps['ReleaseY'] > 0]
+            ax_release.plot([plotted['ReleaseY'].mean(), plotted['ReleaseY'].mean()], [0, 2.5], color='green', linewidth=1, alpha=0.5)
+            ax_release.plot([-1.83, 0], [plotted['ReleaseZ'].mean(), plotted['ReleaseZ'].mean()], color='green', linewidth=1, alpha=0.5)
+            ax_release.text(x=1.8, y=0.05, s='Player Average', fontsize=5, fontweight='bold', color='green', ha='right')
+            ax_release.set_xticks([])  # Turn off x-axis tick labels
+            ax_release.set_yticks([])  # Turn off y-axis tick labels
+            ax_release.set_title('ReleaseY vs ReleaseZ',fontsize=10)
     elif batting_hand == 'Both':
-        ax_release = fig.add_subplot(gs[5:7, :1])
-        ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
-        ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5, color='green')
-        ax_release.set_ylim(bottom=0, top=2.5)
-        ax_release.set_xlim(left=-1.525, right=1.525)
-        ax_release.set_xticks([])  # Turn off x-axis tick labels
-        ax_release.set_yticks([])  # Turn off y-axis tick labels
+        if bowler_side == 'Over' and bowler_type[0] == 'R':
+            ax_release = fig.add_subplot(gs[5:7, :1])
+            ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+            ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5, color='green')
+            ax_release.set_ylim(bottom=0, top=2.5)
+            ax_release.set_xlim(left=-1.83, right=0)
+            ax_release.plot([avg_release_y, avg_release_y], [0, 2.5], color='red', linewidth=1, alpha=0.5)
+            ax_release.plot([-1.83, 0], [avg_release_z, avg_release_z], color='red', linewidth=1, alpha=0.5)
+            ax_release.text(x=-1.8, y=0.1, s='Champ Average', fontsize=5, fontweight='bold', color='red', ha='left')
+            plotted = allmaps[allmaps['ReleaseY'] < 0]
+            ax_release.plot([plotted['ReleaseY'].mean(), plotted['ReleaseY'].mean()], [0, 2.5], color='green', linewidth=1, alpha=0.5)
+            ax_release.plot([-1.83, 0], [plotted['ReleaseZ'].mean(), plotted['ReleaseZ'].mean()], color='green', linewidth=1, alpha=0.5)
+            ax_release.text(x=-1.8, y=0.05, s='Player Average', fontsize=5, fontweight='bold', color='green', ha='left')
+            ax_release.set_xticks([])  # Turn off x-axis tick labels
+            ax_release.set_yticks([])  # Turn off y-axis tick labels
+            ax_release.set_title('ReleaseY vs ReleaseZ',fontsize=10)
+        elif bowler_side == 'Round' and bowler_type[0] == 'R':
+            ax_release = fig.add_subplot(gs[5:7, :1])
+            ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+            ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5, color='green')
+            ax_release.set_ylim(bottom=0, top=2.5)
+            ax_release.set_xlim(left=0, right=1.83)
+            ax_release.plot([avg_release_y, avg_release_y], [0, 2.5], color='red', linewidth=1, alpha=0.5)
+            ax_release.plot([0, 1.83], [avg_release_z, avg_release_z], color='red', linewidth=1, alpha=0.5)
+            ax_release.text(1.8, y=0.1, s='Champ Average', fontsize=5, fontweight='bold', color='red', ha='right')
+            plotted = allmaps[allmaps['ReleaseY'] > 0]
+            ax_release.plot([plotted['ReleaseY'].mean(), plotted['ReleaseY'].mean()], [0, 2.5], color='green', linewidth=1, alpha=0.5)
+            ax_release.plot([-1.83, 0], [plotted['ReleaseZ'].mean(), plotted['ReleaseZ'].mean()], color='green', linewidth=1, alpha=0.5)
+            ax_release.text(x=1.8, y=0.05, s='Player Average', fontsize=5, fontweight='bold', color='green', ha='right')
+            ax_release.set_xticks([])  # Turn off x-axis tick labels
+            ax_release.set_yticks([])  # Turn off y-axis tick labels
+            ax_release.set_title('ReleaseY vs ReleaseZ',fontsize=10)
+        elif bowler_side == 'Round' and bowler_type[0] == 'L':
+            ax_release = fig.add_subplot(gs[5:7, :1])
+            ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+            ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5, color='green')
+            ax_release.set_ylim(bottom=0, top=2.5)
+            ax_release.set_xlim(left=-1.83, right=0)
+            ax_release.plot([avg_release_y, avg_release_y], [0, 2.5], color='red', linewidth=1, alpha=0.5)
+            ax_release.plot([-1.83, 0], [avg_release_z, avg_release_z], color='red', linewidth=1, alpha=0.5)
+            ax_release.text(-1.8, y=0.1, s='Champ Average', fontsize=5, fontweight='bold', color='red', ha='left')
+            plotted = allmaps[allmaps['ReleaseY'] < 0]
+            ax_release.plot([plotted['ReleaseY'].mean(), plotted['ReleaseY'].mean()], [0, 2.5], color='green', linewidth=1, alpha=0.5)
+            ax_release.plot([-1.83, 0], [plotted['ReleaseZ'].mean(), plotted['ReleaseZ'].mean()], color='green', linewidth=1, alpha=0.5)
+            ax_release.text(x=-1.8, y=0.05, s='Player Average', fontsize=5, fontweight='bold', color='green', ha='left')
+            ax_release.set_xticks([])  # Turn off x-axis tick labels
+            ax_release.set_yticks([])  # Turn off y-axis tick labels
+            ax_release.set_title('ReleaseY vs ReleaseZ',fontsize=10)
+        elif bowler_side == 'Over' and bowler_type[0] == 'L':
+            ax_release = fig.add_subplot(gs[5:7, :1])
+            ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+            ax_release.scatter(allmaps['ReleaseY'], allmaps['ReleaseZ'], alpha=0.7, s=5, color='green')
+            ax_release.set_ylim(bottom=0, top=2.5)
+            ax_release.set_xlim(left=0, right=1.83)
+            ax_release.plot([avg_release_y, avg_release_y], [0, 2.5], color='red', linewidth=1, alpha=0.5)
+            ax_release.plot([0, 1.83], [avg_release_z, avg_release_z], color='red', linewidth=1, alpha=0.5)
+            ax_release.text(x=1.8, y=0.1, s='Champ Average', fontsize=5, fontweight='bold', color='red', ha='right')
+            plotted = allmaps[allmaps['ReleaseY'] > 0]
+            ax_release.plot([plotted['ReleaseY'].mean(), plotted['ReleaseY'].mean()], [0, 2.5], color='green', linewidth=1, alpha=0.5)
+            ax_release.plot([-1.83, 0], [plotted['ReleaseZ'].mean(), plotted['ReleaseZ'].mean()], color='green', linewidth=1, alpha=0.5)
+            ax_release.text(x=1.8, y=0.05, s='Player Average', fontsize=5, fontweight='bold', color='green', ha='right')
+            ax_release.set_xticks([])  # Turn off x-axis tick labels
+            ax_release.set_yticks([])  # Turn off y-axis tick labels
+            ax_release.set_title('ReleaseY vs ReleaseZ',fontsize=10)
     
     if batting_hand == 'Right':
         allmaps = allmaps[allmaps['Batting Hand'] == 'RHB']
@@ -328,9 +512,10 @@ def bowler_cards(bowler_name, batting_hand):
 st.title("Bowler Cards Web App")
 bowler_name = st.selectbox("Select a Bowler", player_info['Player Names'].unique())
 batter_hand = st.selectbox("Batter Hand", ['Right', 'Left', 'Both'])
+bowler_side = st.selectbox("Over or Round", ['Over', 'Round'])
 
 if st.button("Generate Bowler Card"):
-    fig = bowler_cards(bowler_name, batter_hand)
+    fig = bowler_cards(bowler_name, batter_hand, bowler_side)
     st.pyplot(fig)
     
 
