@@ -497,8 +497,8 @@ def bowler_cards(bowler_name, batting_hand, bowler_side):
         ax_release.set_title('PastY vs PastZ',fontsize=10)
     elif batting_hand == 'Both':
         ax_release = fig.add_subplot(gs[5:7, 2:])
-        ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto', color='green')
-        ax_release.scatter(allmaps['PastY'], allmaps['PastZ'], alpha=0.7, s=5)
+        ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
+        ax_release.scatter(allmaps['PastY'], allmaps['PastZ'], alpha=0.7, s=5, color='green')
         ax_release.set_ylim(bottom=0, top=2.5)
         ax_release.set_xlim(left=-1.525, right=1.525)
         ax_release.set_xticks([])  # Turn off x-axis tick labels
