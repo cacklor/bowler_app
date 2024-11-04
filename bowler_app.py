@@ -169,11 +169,11 @@ def bowler_cards(bowler_name, batting_hand, bowler_side, average_lines):
 
     avg_release_y = releases['ReleaseY'].mean()
     avg_release_z = releases['ReleaseZ'].mean()
-
-    both_avg_release_y_over = over_releases['ReleaseY'].mean()
-    both_avg_release_z_over = over_releases['ReleaseZ'].mean()
-    both_avg_release_y_round = round_releases['ReleaseY'].mean()
-    both_avg_release_z_round = round_releases['ReleaseZ'].mean()
+    if bowler_side  == 'Both':
+        both_avg_release_y_over = over_releases['ReleaseY'].mean()
+        both_avg_release_z_over = over_releases['ReleaseZ'].mean()
+        both_avg_release_y_round = round_releases['ReleaseY'].mean()
+        both_avg_release_z_round = round_releases['ReleaseZ'].mean()
     
     if batting_hand == 'Right':
         allmaps = allmaps[allmaps['Batting Hand'] == 'RHB']
