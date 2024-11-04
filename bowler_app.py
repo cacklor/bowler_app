@@ -204,8 +204,18 @@ def bowler_cards(bowler_name, batting_hand, bowler_side, average_lines):
         ax_pitch.text(x=1.5, y=9.8, s='Back', fontsize=5, fontweight='bold', color='black', ha='left')
         ax_pitch.text(x=1.5, y=10.5, s='Short', fontsize=5, fontweight='bold', color='black', ha='left')
 
+        if bowler_type[0] == 'R' and bowler_side == 'Over':
+            allmaps1 = allmaps[allmaps['ReleaseY'] < 0]
+        elif bowler_type[0] == 'R' and bowler_side == 'Round':
+            allmaps1 = allmaps[allmaps['ReleaseY'] > 0]
+        elif bowler_type[0] == 'L' and bowler_side == 'Over':
+            allmaps1 = allmaps[allmaps['ReleaseY'] > 0]
+        elif bowler_type[0] == 'L' and bowler_side == 'Round':
+            allmaps1 = allmaps[allmaps['ReleaseY'] < 0]
+        else:
+            allmaps1 = allmaps
 
-        ax_pitch.scatter(allmaps['PitchY'], allmaps['PitchX'], color='green', alpha=0.7, s=5)
+        ax_pitch.scatter(allmaps1['PitchY'], allmaps1['PitchX'], color='green', alpha=0.7, s=5)
         ax_pitch.set_xlim(left=1.83, right=-1.83)
         ax_pitch.set_ylim(top=20.12, bottom=0)
         ax_pitch.set_xticks([])  # Turn off x-axis tick labels
@@ -240,8 +250,18 @@ def bowler_cards(bowler_name, batting_hand, bowler_side, average_lines):
         ax_pitch.text(x=1.5, y=9.8, s='Back', fontsize=5, fontweight='bold', color='black', ha='left')
         ax_pitch.text(x=1.5, y=10.5, s='Short', fontsize=5, fontweight='bold', color='black', ha='left')
 
+        if bowler_type[0] == 'R' and bowler_side == 'Over':
+            allmaps1 = allmaps[allmaps['ReleaseY'] < 0]
+        elif bowler_type[0] == 'R' and bowler_side == 'Round':
+            allmaps1 = allmaps[allmaps['ReleaseY'] > 0]
+        elif bowler_type[0] == 'L' and bowler_side == 'Over':
+            allmaps1 = allmaps[allmaps['ReleaseY'] > 0]
+        elif bowler_type[0] == 'L' and bowler_side == 'Round':
+            allmaps1 = allmaps[allmaps['ReleaseY'] < 0]
+        else:
+            allmaps1 = allmaps
 
-        ax_pitch.scatter(allmaps['PitchY'], allmaps['PitchX'], color='green', alpha=0.7, s=5)
+        ax_pitch.scatter(allmaps1['PitchY'], allmaps1['PitchX'], color='green', alpha=0.7, s=5)
         ax_pitch.set_xlim(left=1.83, right=-1.83)
         ax_pitch.set_ylim(top=20.12, bottom=0)
         ax_pitch.set_xticks([])  # Turn off x-axis tick labels
@@ -275,8 +295,18 @@ def bowler_cards(bowler_name, batting_hand, bowler_side, average_lines):
         ax_pitch.text(x=1.5, y=9.8, s='Back', fontsize=5, fontweight='bold', color='black', ha='left')
         ax_pitch.text(x=1.5, y=10.5, s='Short', fontsize=5, fontweight='bold', color='black', ha='left')
 
+        if bowler_type[0] == 'R' and bowler_side == 'Over':
+            allmaps1 = allmaps[allmaps['ReleaseY'] < 0]
+        elif bowler_type[0] == 'R' and bowler_side == 'Round':
+            allmaps1 = allmaps[allmaps['ReleaseY'] > 0]
+        elif bowler_type[0] == 'L' and bowler_side == 'Over':
+            allmaps1 = allmaps[allmaps['ReleaseY'] > 0]
+        elif bowler_type[0] == 'L' and bowler_side == 'Round':
+            allmaps1 = allmaps[allmaps['ReleaseY'] < 0]
+        else:
+            allmaps1 = allmaps
 
-        ax_pitch.scatter(allmaps['PitchY'], allmaps['PitchX'], color='green', alpha=0.7, s=5)
+        ax_pitch.scatter(allmaps1['PitchY'], allmaps1['PitchX'], color='green', alpha=0.7, s=5)
         ax_pitch.set_xlim(left=1.83, right=-1.83)
         ax_pitch.set_ylim(top=20.12, bottom=0)
         ax_pitch.set_xticks([])  # Turn off x-axis tick labels
@@ -552,6 +582,16 @@ def bowler_cards(bowler_name, batting_hand, bowler_side, average_lines):
     
     if batting_hand == 'Right':
         allmaps = allmaps[allmaps['Batting Hand'] == 'RHB']
+        if bowler_type[0] == 'R' and bowler_side == 'Over':
+            allmaps = allmaps[allmaps['ReleaseY'] < 0]
+        elif bowler_type[0] == 'R' and bowler_side == 'Round':
+            allmaps = allmaps[allmaps['ReleaseY'] > 0]
+        elif bowler_type[0] == 'L' and bowler_side == 'Over':
+            allmaps = allmaps[allmaps['ReleaseY'] > 0]
+        elif bowler_type[0] == 'L' and bowler_side == 'Round':
+            allmaps = allmaps[allmaps['ReleaseY'] < 0]
+        else:
+            allmaps = allmaps
         # Scatter plot for ReleaseY vs ReleaseZ
         ax_release = fig.add_subplot(gs[5:7, 2:])
         ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
@@ -563,6 +603,16 @@ def bowler_cards(bowler_name, batting_hand, bowler_side, average_lines):
         ax_release.set_title('PastY vs PastZ',fontsize=10)
     elif batting_hand == 'Left':
         allmaps = allmaps[allmaps['Batting Hand'] == 'LHB']
+        if bowler_type[0] == 'R' and bowler_side == 'Over':
+            allmaps = allmaps[allmaps['ReleaseY'] < 0]
+        elif bowler_type[0] == 'R' and bowler_side == 'Round':
+            allmaps = allmaps[allmaps['ReleaseY'] > 0]
+        elif bowler_type[0] == 'L' and bowler_side == 'Over':
+            allmaps = allmaps[allmaps['ReleaseY'] > 0]
+        elif bowler_type[0] == 'L' and bowler_side == 'Round':
+            allmaps = allmaps[allmaps['ReleaseY'] < 0]
+        else:
+            allmaps = allmaps
         # Scatter plot for ReleaseY vs ReleaseZ
         ax_release = fig.add_subplot(gs[5:7, 2:])
         ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
@@ -573,6 +623,16 @@ def bowler_cards(bowler_name, batting_hand, bowler_side, average_lines):
         ax_release.set_yticks([])  # Turn off y-axis tick labels
         ax_release.set_title('PastY vs PastZ',fontsize=10)
     elif batting_hand == 'Both':
+        if bowler_type[0] == 'R' and bowler_side == 'Over':
+            allmaps = allmaps[allmaps['ReleaseY'] < 0]
+        elif bowler_type[0] == 'R' and bowler_side == 'Round':
+            allmaps = allmaps[allmaps['ReleaseY'] > 0]
+        elif bowler_type[0] == 'L' and bowler_side == 'Over':
+            allmaps = allmaps[allmaps['ReleaseY'] > 0]
+        elif bowler_type[0] == 'L' and bowler_side == 'Round':
+            allmaps = allmaps[allmaps['ReleaseY'] < 0]
+        else:
+            allmaps = allmaps
         ax_release = fig.add_subplot(gs[5:7, 2:])
         ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
         ax_release.scatter(allmaps['PastY'], allmaps['PastZ'], alpha=0.7, s=5, color='green')
