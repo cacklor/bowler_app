@@ -7,6 +7,9 @@ import matplotlib.patches as patches
 from bs4 import BeautifulSoup
 import requests
 import numpy as np
+from matplotlib import cm
+from matplotlib.colors import Normalize
+
 
 # Load the player information from CSV files
 player_info = pd.read_csv('playerinformation.csv')
@@ -595,7 +598,10 @@ def bowler_cards(bowler_name, batting_hand, bowler_side, average_lines):
         # Scatter plot for ReleaseY vs ReleaseZ
         ax_release = fig.add_subplot(gs[5:7, 2:])
         ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
-        ax_release.scatter(allmaps['PastY'], allmaps['PastZ'], alpha=0.7, s=5, color='green')
+        cmap = cm.get_cmap('RdYlGn_r')
+        norm = Normalize(vmin=0, vmax=6)
+        colors = cmap(norm(allmaps['Runs']))
+        ax_release.scatter(allmaps['PastY'], allmaps['PastZ'], alpha=0.7, s=5, color=colors)
         ax_release.set_ylim(bottom=0, top=2.5)
         ax_release.set_xlim(left=-1.525, right=1.525)
         ax_release.set_xticks([])  # Turn off x-axis tick labels
@@ -616,7 +622,10 @@ def bowler_cards(bowler_name, batting_hand, bowler_side, average_lines):
         # Scatter plot for ReleaseY vs ReleaseZ
         ax_release = fig.add_subplot(gs[5:7, 2:])
         ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
-        ax_release.scatter(allmaps['PastY'], allmaps['PastZ'], alpha=0.7, s=5, color='green')
+        cmap = cm.get_cmap('RdYlGn_r')
+        norm = Normalize(vmin=0, vmax=6)
+        colors = cmap(norm(allmaps['Runs']))
+        ax_release.scatter(allmaps['PastY'], allmaps['PastZ'], alpha=0.7, s=5, color=colors)
         ax_release.set_ylim(bottom=0, top=2.5)
         ax_release.set_xlim(left=-1.525, right=1.525)
         ax_release.set_xticks([])  # Turn off x-axis tick labels
@@ -635,7 +644,10 @@ def bowler_cards(bowler_name, batting_hand, bowler_side, average_lines):
             allmaps = allmaps
         ax_release = fig.add_subplot(gs[5:7, 2:])
         ax_release.imshow(stumps, extent=[-0.1143, 0.1143, 0, 0.72], aspect='auto')
-        ax_release.scatter(allmaps['PastY'], allmaps['PastZ'], alpha=0.7, s=5, color='green')
+        cmap = cm.get_cmap('RdYlGn_r')
+        norm = Normalize(vmin=0, vmax=6)
+        colors = cmap(norm(allmaps['Runs']))
+        ax_release.scatter(allmaps['PastY'], allmaps['PastZ'], alpha=0.7, s=5, color=colors)
         ax_release.set_ylim(bottom=0, top=2.5)
         ax_release.set_xlim(left=-1.525, right=1.525)
         ax_release.set_xticks([])  # Turn off x-axis tick labels
