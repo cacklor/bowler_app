@@ -1,6 +1,6 @@
 import pandas as pd
 
-exp = pd.read_csv('/Users/jamesbrooker/bowler_app/expected_percentages.csv')
+exp = pd.read_csv('/Users/jamesbrooker/bowler_app/expected_percentages_half_sd.csv')
 
 def maindataframe():
     df2 = pd.read_csv('Champo 2024 Full.csv')

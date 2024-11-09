@@ -4,16 +4,16 @@ import numpy as np
 
 df = pd.read_csv('Champo 2024 Full.csv')
 
+releasey_std = df['ReleaseY'].std()
+releasez_std = df['ReleaseZ'].std()
+pitchx_std = df['PitchX'].std()
+pitchy_std = df['PitchY'].std()
+speed_std = df['Speed'].std()
+
 bowlers = df['Bowler'].unique().tolist()
 
 def stat_calculations(bowler):
     bowler_balls = df[df['Bowler'] == bowler]
-    releasey_std = bowler_balls['ReleaseY'].std()
-    releasez_std = bowler_balls['ReleaseZ'].std()
-    pitchx_std = bowler_balls['PitchX'].std()
-    pitchy_std = bowler_balls['PitchY'].std()
-    speed_std = bowler_balls['Speed'].std()
-
     middle_percentage = []
     whiff_percentage = []
     edge_percentage = []
@@ -76,4 +76,4 @@ for i in bowlers:
 data = {'Bowlers': bowlers, 'Expected Middle Percentage': xmp, 'Expected Whiff Percentage': xwp, 'Expected Edge Percentage': xep}
 
 final_df = pd.DataFrame(data)
-final_df.to_csv('expected_percentages.csv')
+final_df.to_csv('expected_percentages_half_sd.csv')
