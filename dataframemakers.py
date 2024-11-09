@@ -89,9 +89,11 @@ def maindataframe():
 
     for index, row in data.iterrows():
         bowler_data = exp[exp['Bowlers'] == row['Bowler']]
-        data['Expected Middle Percentage'] = round(bowler_data['Expected Middle Percentage'].iloc[0], 3)
-        data['Expected Whiff Percentage'] = round(bowler_data['Expected Whiff Percentage'].iloc[0], 3)
-        data['Expected Edge Percentage'] = round(bowler_data['Expected Edge Percentage'].iloc[0], 3)
+        if not bowler_data.empty:  # Check if matching data exists
+            data.at[index, 'Expected Middle Percentage'] = round(bowler_data['Expected Middle Percentage'].iloc[0], 4)
+            data.at[index, 'Expected Whiff Percentage'] = round(bowler_data['Expected Whiff Percentage'].iloc[0], 4)
+            data.at[index, 'Expected Edge Percentage'] = round(bowler_data['Expected Edge Percentage'].iloc[0], 4)
+
     
     expected_data = data.drop(columns=['Middle Percentage', 'Whiff Percentage', 'Edge Percentage'])
     new_order = ['Bowler', 'Average Adjusted Velocity', '90th Percentile Adjusted Velocity',
