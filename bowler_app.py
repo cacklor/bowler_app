@@ -20,6 +20,11 @@ spin_player_percentiles = pd.read_csv('spinpercentileranks.csv')
 pace_bowlers = pace_player_data['Bowler'].unique().tolist()
 spin_bowlers = spin_player_data['Bowler'].unique().tolist()
 
+exp_pace_player_data = pd.read_csv('exppacedata.csv')
+exp_pace_player_percentiles = pd.read_csv('exppacepercentileranks.csv')
+exp_spin_player_data = pd.read_csv('expspindata.csv')
+exp_spin_player_percentiles = pd.read_csv('expspinpercentileranks.csv')
+
 @st.cache_data
 def scrape_espncricinfo_table(url):
     response = requests.get(url)
@@ -46,7 +51,7 @@ def scrape_espncricinfo_table(url):
 
 current_player_stats = scrape_espncricinfo_table('https://www.espncricinfo.com/records/tournament/bowling-most-wickets-career/county-championship-division-one-2024-15937')
 
-def bowler_cards(bowler_name, batting_hand, bowler_side, average_lines):
+def bowler_cards(bowler_name, batting_hand, bowler_side, average_lines, expected_data):
     # Filter the player info for the given bowler name
     info = player_info[player_info['Player Names'] == bowler_name].iloc[0]
     
@@ -89,47 +94,88 @@ def bowler_cards(bowler_name, batting_hand, bowler_side, average_lines):
     table.auto_set_font_size(False)
     table.set_fontsize(12)
 
-    
-    if bowler_name in pace_bowlers:
-        pstats = pace_player_data[pace_player_data['Bowler'] == bowler_name]
-        percentiles = pace_player_percentiles[pace_player_percentiles['Bowler'] == bowler_name]
-    elif bowler_name in spin_bowlers:
-        pstats = spin_player_data[spin_player_data['Bowler'] == bowler_name]
-        percentiles = spin_player_percentiles[spin_player_percentiles['Bowler'] == bowler_name]
+    if expected_data:
+        if bowler_name in pace_bowlers:
+            pstats = exp_pace_player_data[exp_pace_player_data['Bowler'] == bowler_name]
+            percentiles = exp_pace_player_percentiles[exp_pace_player_percentiles['Bowler'] == bowler_name]
+        elif bowler_name in spin_bowlers:
+            pstats = exp_spin_player_data[exp_spin_player_data['Bowler'] == bowler_name]
+            percentiles = exp_spin_player_percentiles[exp_spin_player_percentiles['Bowler'] == bowler_name]
 
-    # Create subplots for colored rectangles
-    n_cols = 4
-    n_rows = 2
-    rect_height = 0.8  # Adjust height of the rectangles
+        # Create subplots for colored rectangles
+        n_cols = 4
+        n_rows = 2
+        rect_height = 0.8  # Adjust height of the rectangles
 
-    for i, col in enumerate(pstats.columns[1:]):  # Skip the first column
-        row = i // n_cols + 2  # Start from row 7
-        col_idx = i % n_cols
+        for i, col in enumerate(pstats.columns[1:]):  # Skip the first column
+            row = i // n_cols + 2  # Start from row 7
+            col_idx = i % n_cols
 
-        if row >= 9:
-            print(f"Row {row} is out of bounds, adjust GridSpec or reduce number of rectangles.")
-            break
+            if row >= 9:
+                print(f"Row {row} is out of bounds, adjust GridSpec or reduce number of rectangles.")
+                break
 
-        ax_rect = fig.add_subplot(gs[row, col_idx])
-        ax_rect.axis('off')
+            ax_rect = fig.add_subplot(gs[row, col_idx])
+            ax_rect.axis('off')
 
-        # Get percentile value for the column
-        percentile_value = percentiles[col].values[0] if col in percentiles.columns else 0
-        # Normalize percentile to a color map range (0-1)
-        color = plt.cm.RdYlGn(percentile_value / 100)
+            # Get percentile value for the column
+            percentile_value = percentiles[col].values[0] if col in percentiles.columns else 0
+            # Normalize percentile to a color map range (0-1)
+            color = plt.cm.RdYlGn(percentile_value / 100)
 
-        # Create rectangle with an outline
-        rect = patches.FancyBboxPatch((0, 0.2), 1, rect_height, boxstyle="round,pad=0.05", color=color, edgecolor='black')
-        ax_rect.add_patch(rect)
-        ax_rect.text(0.5, 0.7, col, ha='center', va='center', fontsize=10, color='black', fontstyle='oblique')
+            # Create rectangle with an outline
+            rect = patches.FancyBboxPatch((0, 0.2), 1, rect_height, boxstyle="round,pad=0.05", color=color, edgecolor='black')
+            ax_rect.add_patch(rect)
+            ax_rect.text(0.5, 0.7, col, ha='center', va='center', fontsize=10, color='black', fontstyle='oblique')
 
-        # Add pstats value below the rectangle
-        pstat_value = pstats[col].values[0] if col in pstats.columns else 'N/A'
-        ax_rect.text(0.5, 0.5, f"{pstat_value}", ha='center', va='center', fontsize=15)
+            # Add pstats value below the rectangle
+            pstat_value = pstats[col].values[0] if col in pstats.columns else 'N/A'
+            ax_rect.text(0.5, 0.5, f"{pstat_value}", ha='center', va='center', fontsize=15)
 
-    # Color key subplot (make it smaller in height)
-    ax_color_key = fig.add_subplot(gs[4, :])
-    ax_color_key.axis('off')
+        # Color key subplot (make it smaller in height)
+        ax_color_key = fig.add_subplot(gs[4, :])
+        ax_color_key.axis('off')
+    else:
+        if bowler_name in pace_bowlers:
+            pstats = pace_player_data[pace_player_data['Bowler'] == bowler_name]
+            percentiles = pace_player_percentiles[pace_player_percentiles['Bowler'] == bowler_name]
+        elif bowler_name in spin_bowlers:
+            pstats = spin_player_data[spin_player_data['Bowler'] == bowler_name]
+            percentiles = spin_player_percentiles[spin_player_percentiles['Bowler'] == bowler_name]
+
+        # Create subplots for colored rectangles
+        n_cols = 4
+        n_rows = 2
+        rect_height = 0.8  # Adjust height of the rectangles
+
+        for i, col in enumerate(pstats.columns[1:]):  # Skip the first column
+            row = i // n_cols + 2  # Start from row 7
+            col_idx = i % n_cols
+
+            if row >= 9:
+                print(f"Row {row} is out of bounds, adjust GridSpec or reduce number of rectangles.")
+                break
+
+            ax_rect = fig.add_subplot(gs[row, col_idx])
+            ax_rect.axis('off')
+
+            # Get percentile value for the column
+            percentile_value = percentiles[col].values[0] if col in percentiles.columns else 0
+            # Normalize percentile to a color map range (0-1)
+            color = plt.cm.RdYlGn(percentile_value / 100)
+
+            # Create rectangle with an outline
+            rect = patches.FancyBboxPatch((0, 0.2), 1, rect_height, boxstyle="round,pad=0.05", color=color, edgecolor='black')
+            ax_rect.add_patch(rect)
+            ax_rect.text(0.5, 0.7, col, ha='center', va='center', fontsize=10, color='black', fontstyle='oblique')
+
+            # Add pstats value below the rectangle
+            pstat_value = pstats[col].values[0] if col in pstats.columns else 'N/A'
+            ax_rect.text(0.5, 0.5, f"{pstat_value}", ha='center', va='center', fontsize=15)
+
+        # Color key subplot (make it smaller in height)
+        ax_color_key = fig.add_subplot(gs[4, :])
+        ax_color_key.axis('off')
     
     # Create a gradient color bar for the key
     gradient = np.linspace(0, 1, 256)
@@ -664,9 +710,10 @@ bowler_name = st.selectbox("Select a Bowler", player_info['Player Names'].unique
 batter_hand = st.selectbox("Batter Hand", ['Both', 'Right', 'Left'])
 bowler_side = st.selectbox("Over or Round", ['Both','Over', 'Round'])
 average_lines = st.checkbox("Toggle Average Releases", value=True)
+expected_data = st.checkbox("Toggle Expected Stats", value=False)
 
 if st.button("Generate Bowler Card"):
-    fig = bowler_cards(bowler_name, batter_hand, bowler_side, average_lines)
+    fig = bowler_cards(bowler_name, batter_hand, bowler_side, average_lines, expected_data)
     st.pyplot(fig)
     
 
