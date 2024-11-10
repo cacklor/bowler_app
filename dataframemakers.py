@@ -49,7 +49,7 @@ def maindataframe():
             swings += 1
             if row['Connection'] == 'Middled':
                 middles += 1
-            elif row['Connection'] in ['Thick Edge', 'Inside Edge', 'Outside Edge','Leading Edge']:
+            elif row['Connection'] in ['Thick Edge', 'Inside Edge', 'Outside Edge','Leading Edge', 'Top Edge', 'Bottom Edge']:
                 edges += 1
             elif row['Connection'] == 'Missed':
                 whiffs += 1
@@ -63,7 +63,7 @@ def maindataframe():
 
     for i in bowlers:
         bowler_balls = df1[df1['Bowler'] == i]
-        edged_balls = bowler_balls[bowler_balls['Connection'].isin(['Thick Edge', 'Inside Edge', 'Outside Edge', 'Leading Edge'])]
+        edged_balls = bowler_balls[bowler_balls['Connection'].isin(['Thick Edge', 'Inside Edge', 'Outside Edge', 'Leading Edge', 'Top Edge', 'Bottom Edge'])]
         if edged_balls.empty:
             runs_per_edge.append(round(0,2))
         else:

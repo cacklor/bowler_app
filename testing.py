@@ -11,12 +11,15 @@ pitchy_std = df['PitchY'].std()
 speed_std = df['Speed'].std()
 
 bowlers = df['Bowler'].unique().tolist()
+connection = df['Connection'].unique().tolist()
+print(connection)
 
 def stat_calculations(bowler):
     bowler_balls = df[df['Bowler'] == bowler]
     middle_percentage = []
     whiff_percentage = []
     edge_percentage = []
+    balls = []
 
     for index, row in bowler_balls.iterrows():
         releasey = row['ReleaseY']
@@ -29,19 +32,24 @@ def stat_calculations(bowler):
                            & (df['ReleaseZ'] < releasez + releasez_std) & (df['ReleaseZ'] > releasez - releasez_std)
                            & (df['PitchX'] < pitchx + pitchx_std) & (df['PitchX'] > pitchx - pitchx_std)
                            & (df['PitchY'] < pitchy + pitchy_std) & (df['PitchY'] > pitchy - pitchy_std)
-                            & (df['Speed'] < speed + speed_std) & (df['Speed'] > speed - speed)]
+                            & (df['Bowler Type'] == row['Bowler Type']) & (df['Batting Hand'] == row['Batting Hand'])
+                           & (df['Speed'] < speed + speed_std) & (df['Speed'] > speed - speed_std)
+                           & (df['Match'] == row['Match']) & (df['Date'] == row['Date']) & (df['Innings'] == row['Innings'])]
         
         similar_balls = similar_balls1[~similar_balls1['Shot'].isin(['Padded Away', 'No Shot'])]
+
+
 
         swings = 0
         middles = 0
         whiffs = 0
         edges = 0
+
         for index, row in similar_balls.iterrows():
             swings += 1
             if row['Connection'] == 'Middled':
                 middles += 1
-            elif row['Connection'] in ['Thick Edge', 'Inside Edge', 'Outside Edge','Leading Edge']:
+            elif row['Connection'] in ['Thick Edge', 'Inside Edge', 'Outside Edge','Leading Edge', 'Top Edge', 'Bottom Edge']:
                 edges += 1
             elif row['Connection'] == 'Missed':
                 whiffs += 1
@@ -51,14 +59,34 @@ def stat_calculations(bowler):
             middle_percentage.append(0)
             whiff_percentage.append(0)
             edge_percentage.append(0)
+            balls.append(similar_balls.shape[0])
         else:
             middle_percentage.append(round(middles/swings, 3))
             whiff_percentage.append(round(whiffs/swings, 3))   
             edge_percentage.append(round(edges/swings, 3))
+            balls.append(similar_balls.shape[0])
     
-    xmiddle_percentage = np.mean(middle_percentage)
-    xwhiff_percentage = np.mean(whiff_percentage)
-    xedge_percentage = np.mean(edge_percentage)
+    adjusted_edgepct = []
+    totalballs = np.sum(balls)
+    for i, j in zip(balls, edge_percentage):
+        adj = (i/totalballs)*j
+        adjusted_edgepct.append(adj)
+
+    adjusted_middlepct = []
+    totalballs = np.sum(balls)
+    for i, j in zip(balls, middle_percentage):
+        adj = (i/totalballs)*j
+        adjusted_middlepct.append(adj)
+
+    adjusted_whiffpct = []
+    totalballs = np.sum(balls)
+    for i, j in zip(balls, whiff_percentage):
+        adj = (i/totalballs)*j
+        adjusted_whiffpct.append(adj)
+
+    xmiddle_percentage = np.sum(adjusted_middlepct)
+    xwhiff_percentage = np.sum(adjusted_whiffpct)
+    xedge_percentage = np.sum(adjusted_edgepct)
 
     return xmiddle_percentage, xwhiff_percentage, xedge_percentage
 
